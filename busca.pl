@@ -22,7 +22,14 @@
 % =====================================================================
 
 % Carrega a base de conhecimento (fatos e regras) deste mesmo diretorio.
+% (rotas.pl tambem faz ensure_loaded(busca); a carga mutua e segura porque
+%  ensure_loaded nao recarrega arquivo ja carregado.)
 :- ensure_loaded(rotas).
+
+% Importa explicitamente library(lists) para reverse/2, member/2 e append/3.
+% Garante o funcionamento mesmo com autoload desligado (portabilidade entre
+% maquinas: ver doc SWI sobre autoload e 'swipl --no-autoload').
+:- use_module(library(lists)).
 
 
 % ---------------------------------------------------------------------

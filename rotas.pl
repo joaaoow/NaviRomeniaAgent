@@ -4,9 +4,14 @@
 %    (B) REGRAS -> conhecimento derivado por inferencia (conectividade, rotas)
 %  A parte de BUSCA (BFS, DFS, A*) esta no arquivo busca.pl
 %
-%  Como carregar:   swipl rotas.pl
+%  Como carregar:   swipl rotas.pl   (ou swipl busca.pl - ambos funcionam)
 %  Depois faca consultas, ex.:   ?- cidade(arad).
 % =====================================================================
+
+% Importa explicitamente library(lists) para member/2 (usado em alcancavel/2 e
+% nas regras). Sem isto, em maquinas com autoload desligado (flag autoload=false
+% ou 'swipl --no-autoload') a chamada a member/2 daria "Unknown procedure".
+:- use_module(library(lists)).
 
 
 % ---------------------------------------------------------------------
@@ -157,3 +162,18 @@ melhor_rota(A, B, Rota, Dist) :-
 classifica_viagem(A, B, curta) :- melhor_rota(A, B, _, D), D < 150.
 classifica_viagem(A, B, media) :- melhor_rota(A, B, _, D), D >= 150, D =< 300.
 classifica_viagem(A, B, longa) :- melhor_rota(A, B, _, D), D > 300.
+
+
+% ---------------------------------------------------------------------
+% CARGA DA BUSCA (robustez de carregamento)
+% ---------------------------------------------------------------------
+% As regras melhor_rota/4 e classifica_viagem/3 acima dependem de caminho/3,
+% que e definido em busca.pl. Carregamos busca.pl aqui para que o projeto
+% funcione AO CARREGAR QUALQUER UM DOS DOIS ARQUIVOS (swipl rotas.pl OU
+% swipl busca.pl). Isto corrige o erro "Unknown procedure: caminho/3" que
+% ocorria quando alguem carregava so o rotas.pl.
+%
+% ensure_loaded/1 equivale a load_files(_, [if(not_loaded)]): nao recarrega
+% arquivo ja carregado. Por isso a dependencia mutua com o ':- ensure_loaded(rotas).'
+% no topo de busca.pl NAO causa laco infinito (carrega cada arquivo uma unica vez).
+:- ensure_loaded(busca).

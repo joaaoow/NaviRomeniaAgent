@@ -36,9 +36,11 @@ clássico de IA: encontrar o caminho de menor custo num grafo, com heurística a
 | Arquivo          | Conteúdo                                                                 |
 |------------------|--------------------------------------------------------------------------|
 | `rotas.pl`       | **Base de conhecimento**: 20 fatos `cidade/1`, 23 `estrada/3`, 20 `h/2` (heurística) e 8 regras (incl. 2 recursivas). |
-| `busca.pl`       | **Algoritmos de busca**: DFS (`caminho/3`), BFS (`bfs/3`) e A\* (`astar/4`). Carrega `rotas.pl` automaticamente. |
+| `busca.pl`       | **Algoritmos de busca**: DFS (`caminho/3`), BFS (`bfs/3`) e A\* (`astar/4`). Carrega `rotas.pl` automaticamente (e vice-versa). |
 | `agente.md`      | **Modelagem do agente** "NaviRomênia": PEAS, classificação do ambiente e tipo de agente. |
 | `consultas.md`   | **13 consultas demonstradas** com as saídas reais do interpretador + explicação de unificação/backtracking. |
+| `tests/`         | **Testes automatizados** (`plunit`): `test_rotas.pl`, `test_busca.pl` e `tests/README.md`. |
+| `run_tests.pl`   | **Runner de testes**: carrega os dois suites e roda todos de uma vez.    |
 | `CLAUDE.md`      | Resumo das exigências do enunciado (contexto do projeto).                |
 | `README.md`      | Este arquivo.                                                            |
 
@@ -69,6 +71,11 @@ swipl busca.pl
 
 > `busca.pl` já carrega `rotas.pl` (via `:- ensure_loaded(rotas).`), então **toda** a
 > base de conhecimento e os três algoritmos ficam disponíveis de uma vez.
+>
+> **Tanto faz qual arquivo você abre:** `swipl rotas.pl` também funciona, pois os dois
+> se carregam mutuamente. (Antes, abrir só `rotas.pl` dava `Unknown procedure: caminho/3`
+> — isso foi corrigido.) Os arquivos também importam `library(lists)` explicitamente,
+> para rodar mesmo em máquinas com *autoload* desativado.
 
 No prompt `?-`, experimente:
 
@@ -122,6 +129,26 @@ Para a viagem **Arad → Bucareste**, os três algoritmos produzem:
 O valor **418 km** do A\* coincide com o resultado clássico de Russell & Norvig,
 confirmando que a heurística é admissível e a busca é ótima. Veja `consultas.md` para
 as 13 consultas completas com saídas reais.
+
+---
+
+## Testes automatizados
+
+O projeto inclui uma suíte de testes em **`plunit`** (framework nativo do SWI-Prolog),
+com **35 testes** (44 com sub-testes) que validam fatos, regras e os três algoritmos
+de busca — incluindo provas de **otimalidade do A\*** e **admissibilidade da heurística**.
+
+```bash
+swipl run_tests.pl
+```
+
+Saída esperada:
+
+```
+% All 35 (+44 sub-tests) tests passed
+```
+
+Detalhes de cada caso em [`tests/README.md`](tests/README.md).
 
 ---
 
