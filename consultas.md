@@ -203,7 +203,16 @@ C = [arad, zerind, oradea, sibiu, fagaras, bucareste].
 ```
 
 A DFS usa a **pilha implícita** do backtracking do Prolog. Acha o primeiro caminho
-seguindo a ordem das estradas — **não** o mais curto. Distância dessa rota: **607 km**.
+seguindo a ordem das estradas — **não** o mais curto.
+
+A versão `caminho/4` devolve também o **custo em km** (soma das estradas via
+`distancia_rota/2`), para comparar com a A\*:
+
+```prolog
+?- caminho(arad, bucareste, C, Custo).
+C = [arad, zerind, oradea, sibiu, fagaras, bucareste],
+Custo = 607.
+```
 
 ---
 
@@ -217,7 +226,16 @@ C = [arad, sibiu, fagaras, bucareste].
 ```
 
 A BFS usa uma **fila (FIFO)** e expande por níveis → encontra a rota com **menor número
-de saltos** (3 estradas). Distância: **450 km**. Menos cidades, mas não a mais curta em km.
+de saltos** (3 estradas). A versão `bfs/4` mostra o **custo em km** dessa rota:
+
+```prolog
+?- bfs(arad, bucareste, C, Custo).
+C = [arad, sibiu, fagaras, bucareste],
+Custo = 450.
+```
+
+Menos cidades, mas **não** a mais curta em km (450 > 418 da A\*): a BFS minimiza
+número de saltos, não distância.
 
 ---
 

@@ -48,6 +48,12 @@ test(dfs_vizinho_direto) :-
     once(caminho(arad, zerind, C)),
     C == [arad, zerind].
 
+% Versao com custo (caminho/4): a 1a solucao da DFS custa 607 km.
+test(dfs_com_custo) :-
+    once(caminho(arad, bucareste, C, Custo)),
+    C == [arad, zerind, oradea, sibiu, fagaras, bucareste],
+    Custo =:= 607.
+
 % Documenta a 1a solucao do DFS (depende da ORDEM das clausulas estrada/3):
 % arad -> zerind -> oradea -> sibiu -> fagaras -> bucareste.
 % (Mostra o comportamento "vai fundo no 1o ramo" caracteristico da DFS.)
@@ -74,6 +80,12 @@ test(bfs_menor_numero_de_cidades) :-
 test(bfs_vizinho_direto) :-
     once(bfs(arad, sibiu, C)),
     C == [arad, sibiu].
+
+% Versao com custo (bfs/4): a rota de menos cidades custa 450 km (nao eh a otima).
+test(bfs_com_custo) :-
+    once(bfs(arad, bucareste, C, Custo)),
+    C == [arad, sibiu, fagaras, bucareste],
+    Custo =:= 450.
 
 % =====================================================================
 % (3) A*  -  astar/4   (otimo em km)

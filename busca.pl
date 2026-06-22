@@ -46,6 +46,13 @@ caminho(Inicio, Fim, Caminho) :-
     dfs(Inicio, Fim, [Inicio], CaminhoRev),
     reverse(CaminhoRev, Caminho).
 
+% Versao com CUSTO (arity 4): alem do caminho, devolve a distancia total em km,
+% somando as estradas com distancia_rota/2 (rotas.pl). Assim a DFS tambem exibe
+% o custo, igual ao astar/4. Ex.: ?- caminho(arad, bucareste, C, Custo).
+caminho(Inicio, Fim, Caminho, Custo) :-
+    caminho(Inicio, Fim, Caminho),
+    distancia_rota(Caminho, Custo).
+
 % caso base: cheguei ao destino -> o caminho acumulado eh a resposta.
 dfs(Fim, Fim, Visitadas, Visitadas).
 
@@ -68,6 +75,13 @@ dfs(Atual, Fim, Visitadas, Caminho) :-
 bfs(Inicio, Fim, Caminho) :-
     bfs_fila([[Inicio]], Fim, CaminhoRev),
     reverse(CaminhoRev, Caminho).
+
+% Versao com CUSTO (arity 4): mesma rota da BFS (menos cidades), agora com a
+% distancia total em km. Note que esse custo NAO eh necessariamente o menor
+% (a BFS minimiza numero de cidades, nao km). Ex.: ?- bfs(arad, bucareste, C, Custo).
+bfs(Inicio, Fim, Caminho, Custo) :-
+    bfs(Inicio, Fim, Caminho),
+    distancia_rota(Caminho, Custo).
 
 % Se o primeiro caminho da fila ja termina no objetivo, achamos.
 bfs_fila([[Fim | T] | _], Fim, [Fim | T]).
